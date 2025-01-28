@@ -1,16 +1,14 @@
- {%  load static %}
 <li>
-    <article class="post">
-      <a href="{% url 'blog-posts' post.slug %}">
-        <img src="{% static 'blog/images/'|add:post.image %}" alt="{{post.title}}" />
-        <div class="post__content">
-          <h3> {{post.title|title}}</h3>
-         
-          <p>
-            {{post.excerpt|title}}
-           
-          </p>
-        </div>
-      </a>
+    <article class="post shadow-sm p-3">
+        <a href="{% url 'post-detail-page' post.slug %}">
+            <img src="{{ post.image.url }}" alt="{{post.title}}" />
+            <div class="post__content">
+                <h3 class="fs-4 fw-normal"> {{post.title|title|linebreaks}}</h3>
+                <p class="fw-light">{{post.content}}</p>
+                {% for comment in comments %}
+                {{comment.text}}
+                {% endfor %}
+            </div>
+        </a>
     </article>
-  </li>
+</li>

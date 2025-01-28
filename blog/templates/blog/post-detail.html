@@ -14,19 +14,71 @@
 <section id="summary">
     <h2>{{post.title}}</h2>
     {% for tag in tags %}
-    <h4>{{tag.caption}}</h4>
+    <h3 class="badge text-bg-light fs-4 text-secondary">{{tag}}</h3>
     {% endfor %}
+    <div>
+        <button class="btn btn-outline-light shadow-lg btn-lg">Read Later</button>
+    </div>
+
     <article>
-        <img src="{% static 'blog/images/'|add:post.image %}" alt="">
+        <img src="{{ post.image.url }}" alt="">
         <address> <a href="mailto:{{post.author.email}}">{{post.author}}</a></address>
         <div>
             Last Updated on <Time>{{post.date|date:"D d M Y"}}</Time>
         </div>
     </article>
 </section>
+<section class="comments"></section>
 
 <main>
-    <p>{{post.content|linebreaks}}</p>
+    <p>{{post.content}}</p>
 </main>
 
+<section class="comments mt-4">
+    <h3 class="mb-3 text-center">Comments</h3>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-12"> <!-- Adjust column size as needed -->
+                {% for comment in comments %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ comment.user_name }}</h5>
+                        <p class="card-text">{{ comment.text }}</p>
+                        <footer class="blockquote-footer">{{ comment.date|date:"D d M Y" }}</footer>
+                        <footer class="blockquote-footer">{{ comment.time }}</footer>
+                    </div>
+                </div>
+                {% empty %}
+                <p>No comments yet. Be the first to comment!</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+{% if comment_form.errors %}
+<div class="alert alert-secondary text-center" role="alert">
+    Please Check the Comment Form below and fix your goddamn errors.
+</div>
+{% endif %}
+<section class="comment-form mt-4">
+    <h4 class="mb-3 text-center">Submit a Comment</h4>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card p-4">
+                    <form action="{% url 'post-detail-page' post.slug %}" method="POST" class="form">
+                        {% csrf_token %}
+                        {{ comment_form }}
+                        <div class="d-flex justify-content-center">
+                            <button type="submit" class="btn btn-secondary w-100 mt-3">Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

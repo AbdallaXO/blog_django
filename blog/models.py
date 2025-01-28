@@ -13,7 +13,7 @@ class Tag(models.Model):
         return self.caption
 
     class Meta:
-        verbose_name_plural = "Tags"
+        verbose_name_plural = "tag"
 
 
 class Author(models.Model):
@@ -31,8 +31,6 @@ class Author(models.Model):
     class Meta:
         verbose_name_plural = "Users"
 
-    ...
-
 
 class Post(models.Model):
     author = models.ForeignKey(
@@ -42,7 +40,7 @@ class Post(models.Model):
     title = models.CharField(max_length=100)
     excerpt = models.CharField(max_length=300)
     date = models.DateField(auto_now=True)
-    image = models.CharField(max_length=40)
+    image = models.ImageField(upload_to="posts", null=True)
     slug = models.SlugField(max_length=100, unique=True)
     tag = models.ManyToManyField(Tag)
 
@@ -54,3 +52,16 @@ class Post(models.Model):
 
     def __str__(self):
         return f"{self.title}"
+
+
+class Comment(models.Model):
+    user_name = models.CharField(max_length=100)
+    user_email = models.EmailField()
+    text = models.TextField(max_length=400)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name="comments")
+    date = models.DateField(auto_now=True)
+    time = models.TimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Comment By {self.user_name}"
+     
